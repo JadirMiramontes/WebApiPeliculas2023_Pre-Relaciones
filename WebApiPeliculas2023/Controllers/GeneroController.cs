@@ -84,6 +84,15 @@ namespace WebApiPeliculas2023.Controllers
 		}
 
 		//End point para actualizar hecho por el profe
+		[HttpPut("ModificarGenero/{id:int}")]
+		public async Task<ActionResult> ModificarGenero(int id, Genero genero)
+		{
+			var existe = await context.Generos.AnyAsync(x => x.Id == id);
+			if(!existe) return NotFound("El producto no existe");
 
+			context.Update(genero);
+			await context.SaveChangesAsync();
+			return Ok(genero);
+		}
 	}
 }
