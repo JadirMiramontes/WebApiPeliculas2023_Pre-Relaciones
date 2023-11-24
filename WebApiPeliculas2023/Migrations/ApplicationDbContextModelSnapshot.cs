@@ -22,6 +22,21 @@ namespace WebApiPeliculas2023.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("GeneroPelicula", b =>
+                {
+                    b.Property<int>("GenerosId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PeliculasId")
+                        .HasColumnType("int");
+
+                    b.HasKey("GenerosId", "PeliculasId");
+
+                    b.HasIndex("PeliculasId");
+
+                    b.ToTable("GeneroPelicula");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -237,25 +252,6 @@ namespace WebApiPeliculas2023.Migrations
                     b.ToTable("Generos");
                 });
 
-            modelBuilder.Entity("WebApiPeliculas2023.Models.GeneroPelicula", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("IdGeneros")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdPeliculas")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("GenerosPeliculas");
-                });
-
             modelBuilder.Entity("WebApiPeliculas2023.Models.Opinion", b =>
                 {
                     b.Property<int>("Id")
@@ -280,7 +276,12 @@ namespace WebApiPeliculas2023.Migrations
                     b.Property<int>("IdUsuario")
                         .HasColumnType("int");
 
+                    b.Property<int>("PeliculaId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("PeliculaId");
 
                     b.ToTable("Opiniones");
                 });
@@ -328,6 +329,21 @@ namespace WebApiPeliculas2023.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("GeneroPelicula", b =>
+                {
+                    b.HasOne("WebApiPeliculas2023.Models.Genero", null)
+                        .WithMany()
+                        .HasForeignKey("GenerosId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebApiPeliculas2023.Models.Pelicula", null)
+                        .WithMany()
+                        .HasForeignKey("PeliculasId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -379,6 +395,22 @@ namespace WebApiPeliculas2023.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("WebApiPeliculas2023.Models.Opinion", b =>
+                {
+                    b.HasOne("WebApiPeliculas2023.Models.Pelicula", "Pelicula")
+                        .WithMany("Opiniones")
+                        .HasForeignKey("PeliculaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Pelicula");
+                });
+
+            modelBuilder.Entity("WebApiPeliculas2023.Models.Pelicula", b =>
+                {
+                    b.Navigation("Opiniones");
                 });
 #pragma warning restore 612, 618
         }

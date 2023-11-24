@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WebApiPeliculas2023.Migrations
 {
     /// <inheritdoc />
-    public partial class Identity : Migration
+    public partial class Relaciones : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -48,6 +48,48 @@ namespace WebApiPeliculas2023.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Generos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Generos", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Peliculas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Titulo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Calificacion = table.Column<double>(type: "float", nullable: false),
+                    Duracion = table.Column<double>(type: "float", nullable: false),
+                    Imagen = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Peliculas", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -156,6 +198,54 @@ namespace WebApiPeliculas2023.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "GeneroPelicula",
+                columns: table => new
+                {
+                    GenerosId = table.Column<int>(type: "int", nullable: false),
+                    PeliculasId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GeneroPelicula", x => new { x.GenerosId, x.PeliculasId });
+                    table.ForeignKey(
+                        name: "FK_GeneroPelicula_Generos_GenerosId",
+                        column: x => x.GenerosId,
+                        principalTable: "Generos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_GeneroPelicula_Peliculas_PeliculasId",
+                        column: x => x.PeliculasId,
+                        principalTable: "Peliculas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Opiniones",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IdPelicula = table.Column<int>(type: "int", nullable: false),
+                    IdUsuario = table.Column<int>(type: "int", nullable: false),
+                    Comentario = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Calificacion = table.Column<double>(type: "float", nullable: false),
+                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PeliculaId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Opiniones", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Opiniones_Peliculas_PeliculaId",
+                        column: x => x.PeliculaId,
+                        principalTable: "Peliculas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -194,6 +284,16 @@ namespace WebApiPeliculas2023.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GeneroPelicula_PeliculasId",
+                table: "GeneroPelicula",
+                column: "PeliculasId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Opiniones_PeliculaId",
+                table: "Opiniones",
+                column: "PeliculaId");
         }
 
         /// <inheritdoc />
@@ -215,10 +315,25 @@ namespace WebApiPeliculas2023.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "GeneroPelicula");
+
+            migrationBuilder.DropTable(
+                name: "Opiniones");
+
+            migrationBuilder.DropTable(
+                name: "Users");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Generos");
+
+            migrationBuilder.DropTable(
+                name: "Peliculas");
         }
     }
 }

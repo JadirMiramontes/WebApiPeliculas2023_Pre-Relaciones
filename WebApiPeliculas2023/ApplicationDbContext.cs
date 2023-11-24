@@ -14,7 +14,6 @@ namespace WebApiPeliculas2023
 
         public DbSet<Pelicula> Peliculas { get; set; }
 		public DbSet<Genero> Generos { get; set; }
-		public DbSet<GeneroPelicula> GenerosPeliculas { get; set; }
 		public DbSet<Opinion> Opiniones { get; set; }
 		public DbSet<User> Users { get; set; }
 	}

@@ -8,5 +8,7 @@
         public string Comentario { get; set; }
         public double Calificacion { get; set; }
         public DateTime Fecha { get; set; }
+        public Pelicula Pelicula { get; set; } = null!;
+        public User Usuario { get; } = null!;
     }
 }
